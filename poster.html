@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;500;600;700;800&family=Noto+Serif+Telugu:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --w: 1080px;
+    --h: 1350px;
+    --ink: #10243e;
+    --accent: #0d6efd;
+    --panel: rgba(255,255,255,0.92);
+    --header-bg: linear-gradient(135deg, #e8f1ff 0%, #c7d9ff 100%);
+    --services-bg: linear-gradient(135deg, #f0f5ff 0%, #dce8ff 100%);
+    --visual-bg: rgba(232,241,255,0.6);
+    --when-bg: linear-gradient(135deg, rgba(13,110,253,0.95) 0%, rgba(30,80,220,0.85) 100%);
+    --location-bg: linear-gradient(135deg, rgba(10,50,120,1) 0%, rgba(5,25,80,1) 100%);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ background:#333; }
+  /* The poster itself. Fixed pixel size so the screenshot is deterministic. */
+  #poster{
+    position:relative;
+    width:var(--w);
+    height:var(--h);
+    overflow:hidden;
+    font-family:"Noto Serif Telugu", sans-serif;
+    color:var(--ink);
+    /* Fallback background if no ?bg= image is supplied */
+    background: linear-gradient(160deg,#e8f1ff 0%,#f7fbff 45%,#eaf6f2 100%);
+    background-size:cover;
+    background-position:center;
+  }
+  /* Soft top + bottom scrims so text stays readable over any photo */
+  #poster::before{
+    content:""; position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.35) 22%, rgba(255,255,255,0) 40%),
+      linear-gradient(0deg,  rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.40) 18%, rgba(255,255,255,0) 34%);
+    pointer-events:none;
+  }
+
+  .stack{ position:absolute; inset:0; display:flex; flex-direction:column; }
+
+  /* ---- Section 1: Doctor details ---- */
+  .header{
+    padding:80px 70px 70px;
+    text-align:center;
+    background:var(--header-bg);
+  }
+  .doc-name{ font-family:"Anek Telugu",sans-serif; font-weight:800; font-size:74px; line-height:1.05; color:var(--ink); }
+  .cred{ font-family:"Noto Serif Telugu",sans-serif; font-weight:700; font-size:34px; letter-spacing:.5px; color:var(--accent); margin-top:8px; }
+  .hospital{ font-family:"Noto Serif Telugu",sans-serif; font-weight:600; font-size:38px; margin-top:6px; color:var(--ink); }
+
+  /* ---- Section 2: Middle (visual + services) ---- */
+  .middle{
+    flex:0 0 500px;
+    display:flex;
+    flex-direction:row;
+  }
+  .visual{
+    flex:0 0 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--visual-bg);
+    overflow:hidden;
+  }
+  .visual img{ width:100%; height:100%; object-fit:cover; }
+  .visual svg{ width:150px; height:150px; opacity:.9; }
+  .services{
+    flex:0 0 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px 40px;
+    text-align:center;
+    background:var(--services-bg);
+    font-family:"Noto Serif Telugu", sans-serif;
+    font-weight:600;
+    font-size:44px;
+    line-height:1.5;
+    color:var(--ink);
+  }
+
+  /* ---- Section 3: Date/time/phone ---- */
+  .when{
+    background:var(--when-bg);
+    color:#fff;
+    padding:22px 70px;
+    text-align:center;
+  }
+  .date-line{ font-family:"Anek Telugu",sans-serif; font-weight:800; font-size:32px; line-height:1.2; }
+  .time-line{ font-family:"Noto Serif Telugu",sans-serif; font-weight:600; font-size:32px; line-height:1.2; margin-top:4px; opacity:.95; }
+  .phone{ font-family:"Noto Serif Telugu",sans-serif; font-weight:700; font-size:32px; line-height:1.2; margin-top:4px; letter-spacing:1px; }
+
+  /* ---- Section 4: Location ---- */
+  .location{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:var(--location-bg);
+    color:#fff;
+    padding:36px 70px;
+    text-align:center;
+  }
+  .loc-name{ font-family:"Anek Telugu",sans-serif; font-weight:800; font-size:48px; line-height:1.15; }
+  .loc-addr{ font-family:"Noto Serif Telugu",sans-serif; font-weight:500; font-size:32px; line-height:1.4; margin-top:8px; opacity:.93; }
+</style>
+</head>
+<body>
+<div id="poster">
+  <div class="stack">
+    <!-- Section 1: Doctor details -->
+    <div class="header">
+      <div class="doc-name" id="docName"></div>
+      <div class="cred" id="cred"></div>
+      <div class="hospital" id="hospital"></div>
+    </div>
+
+    <!-- Section 2: Visual + Services -->
+    <div class="middle">
+      <div class="visual">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer circle -->
+          <circle cx="100" cy="100" r="95" stroke="#0d6efd" stroke-width="5" fill="rgba(13,110,253,0.06)"/>
+          <!-- Medical cross -->
+          <rect x="72" y="38" width="56" height="124" rx="14" fill="#0d6efd"/>
+          <rect x="38" y="72" width="124" height="56" rx="14" fill="#0d6efd"/>
+          <!-- Bone silhouette overlay (simplified) -->
+          <circle cx="100" cy="100" r="18" fill="white"/>
+          <!-- Subtle ECG pulse line -->
+          <polyline points="30,130 50,130 62,108 74,152 86,110 98,130 120,130 132,92 144,152 160,108 170,130 190,130"
+                    stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="services" id="services"></div>
+    </div>
+
+    <!-- Section 3: Date, time, phone -->
+    <div class="when">
+      <div class="date-line" id="dateLine"></div>
+      <div class="time-line" id="timeLine"></div>
+      <div class="phone"><span id="phone"></span></div>
+    </div>
+
+    <!-- Section 4: Location -->
+    <div class="location">
+      <div class="loc-name" id="locName"></div>
+      <div class="loc-addr" id="locAddr"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const THEMES = {
+  blue: {
+    accent:      "#0d6efd",
+    ink:         "#10243e",
+    headerBg:    "linear-gradient(135deg, #e8f1ff 0%, #c7d9ff 100%)",
+    servicesBg:  "linear-gradient(135deg, #f0f5ff 0%, #dce8ff 100%)",
+    visualBg:    "rgba(232,241,255,0.6)",
+    whenBg:      "linear-gradient(135deg, rgba(13,110,253,0.95) 0%, rgba(30,80,220,0.85) 100%)",
+    locationBg:  "linear-gradient(135deg, rgba(10,50,120,1) 0%, rgba(5,25,80,1) 100%)",
+  },
+  teal: {
+    accent:      "#0d9488",
+    ink:         "#0f2a28",
+    headerBg:    "linear-gradient(135deg, #e0f7f5 0%, #b2e8e4 100%)",
+    servicesBg:  "linear-gradient(135deg, #f0fafa 0%, #ccefed 100%)",
+    visualBg:    "rgba(220,242,240,0.6)",
+    whenBg:      "linear-gradient(135deg, rgba(13,148,136,0.95) 0%, rgba(8,110,100,0.88) 100%)",
+    locationBg:  "linear-gradient(135deg, rgba(8,90,82,1) 0%, rgba(4,50,45,1) 100%)",
+  },
+  warm: {
+    accent:      "#c2410c",
+    ink:         "#3b1a0f",
+    headerBg:    "linear-gradient(135deg, #fff3e8 0%, #ffd9b8 100%)",
+    servicesBg:  "linear-gradient(135deg, #fff8f0 0%, #ffe8cc 100%)",
+    visualBg:    "rgba(255,237,213,0.6)",
+    whenBg:      "linear-gradient(135deg, rgba(194,65,12,0.95) 0%, rgba(160,40,5,0.88) 100%)",
+    locationBg:  "linear-gradient(135deg, rgba(120,35,5,1) 0%, rgba(70,15,2,1) 100%)",
+  },
+  green: {
+    accent:      "#16a34a",
+    ink:         "#0f2d1a",
+    headerBg:    "linear-gradient(135deg, #e8f7ee 0%, #bbebb0 100%)",
+    servicesBg:  "linear-gradient(135deg, #f2faef 0%, #ceeec5 100%)",
+    visualBg:    "rgba(220,242,228,0.6)",
+    whenBg:      "linear-gradient(135deg, rgba(22,163,74,0.95) 0%, rgba(15,120,50,0.88) 100%)",
+    locationBg:  "linear-gradient(135deg, rgba(10,90,40,1) 0%, rgba(5,50,20,1) 100%)",
+  },
+};
+
+const DOCTOR = {
+  name:     "డా. సురేష్ తుమ్మలపల్లి",
+  cred:     "MBBS, DNB Orthopedics",
+  hospital: "కిమ్స్ హాస్పిటల్స్, హైదరాబాద్",
+  phone:    "9492978081",
+  services: "మోకాలు, తుంటి, మెడ, నడుము నొప్పి వంటి ఆర్థోపెడిక్ సమస్యలకు చికిత్స చేయబడును",
+};
+
+const LOCATIONS = [
+  {
+    time: "ఉదయం 9 నుండి 10:30 వరకు",
+    name: "కావేరి ENT హాస్పిటల్",
+    addr: ["పాత MD హాస్పిటల్ రోడ్", "సత్తుపల్లి"],
+  },
+  {
+    time: "మధ్యాహ్నం 12 నుండి సాయంత్రం 4 వరకు",
+    name: "డా. సురేష్ ఆర్థోపెడిక్స్ క్లినిక్",
+    addr: ["బస్ స్టాండ్ దగ్గర, గవర్నమెంట్ హాస్పిటల్ రోడ్,", "కార్ స్టాండ్ ఎదురుగా", "విస్సన్నపేట"],
+  },
+  {
+    time: "సాయంత్రం 5 నుండి 7 వరకు",
+    name: "సత్య కిరణ్ డయాగ్నోస్టిక్స్ & ఎక్సరే",
+    addr: ["బోసు బొమ్మ సెంటర్, SBI ATM పక్కన",  "తిరువూరు"],
+  },
+];
+
+/* ---- helpers ---- */
+function upcomingSunday(from){
+  const d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+  const daysUntil = (7 - d.getDay()) % 7;   // 0 if today is Sunday
+  d.setDate(d.getDate() + daysUntil);
+  return d;
+}
+function fmtDate(d){
+  const p = n => String(n).padStart(2,"0");
+  return `${p(d.getDate())}-${p(d.getMonth()+1)}-${d.getFullYear()}`;
+}
+function qp(name, def){
+  const v = new URLSearchParams(location.search).get(name);
+  return v === null ? def : v;
+}
+
+/* ---- render ---- */
+(function render(){
+  const locIndex = parseInt(qp("loc","0"),10) || 0;
+  const loc = LOCATIONS[locIndex] || LOCATIONS[0];
+
+  // Apply theme palette
+  const theme = THEMES[qp("theme", "blue")] || THEMES.blue;
+  const root = document.documentElement.style;
+  root.setProperty("--accent",      theme.accent);
+  root.setProperty("--ink",         theme.ink);
+  root.setProperty("--header-bg",   theme.headerBg);
+  root.setProperty("--services-bg", theme.servicesBg);
+  root.setProperty("--visual-bg",   theme.visualBg);
+  root.setProperty("--when-bg",     theme.whenBg);
+  root.setProperty("--location-bg", theme.locationBg);
+
+  // Optional override of "today" for testing:  ?today=2026-07-25
+  const todayParam = qp("today", null);
+  const base = todayParam ? new Date(todayParam+"T00:00:00") : new Date();
+  const sunday = upcomingSunday(base);
+  const sunday_telugu = "ఆదివారం "
+
+  // Optional background image passed by the generator: ?bg=backgrounds/x.jpg
+  const bg = qp("bg", null);
+  if (bg){ document.getElementById("poster").style.backgroundImage = `url("${bg}")`; }
+
+  // Theme visual image: ?img=themes/medical/1.jpg  (falls back to SVG if absent)
+  const img = qp("img", null);
+  if (img){
+    const visualEl = document.querySelector(".visual");
+    visualEl.innerHTML = `<img src="${img}" alt="">`;
+  }
+
+  document.getElementById("docName").textContent  = DOCTOR.name;
+  document.getElementById("cred").textContent      = DOCTOR.cred;
+  document.getElementById("hospital").textContent  = DOCTOR.hospital;
+  document.getElementById("services").textContent  = DOCTOR.services;
+  document.getElementById("phone").textContent     = DOCTOR.phone;
+
+  document.getElementById("dateLine").textContent  = fmtDate(sunday) + " " + sunday_telugu;
+  document.getElementById("timeLine").textContent  = loc.time;
+  document.getElementById("locName").textContent   = loc.name;
+  const addrEl = document.getElementById("locAddr");
+  addrEl.innerHTML = loc.addr.map(line => `<span>${line}</span>`).join("<br>");
+
+  document.title = `poster_loc${locIndex}_${fmtDate(sunday)}`;
+})();
+</script>
+</body>
+</html>

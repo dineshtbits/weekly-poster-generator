@@ -1,0 +1,10 @@
+{
+  "name": "Green",
+  "accent": "#16a34a",
+  "ink": "#0f2d1a",
+  "panel": "rgba(255,255,255,0.92)",
+  "visual_bg": "rgba(220,242,228,0.6)",
+  "when_bg": "rgba(22,163,74,0.88)",
+  "location_bg": "rgba(10,90,40,0.97)",
+  "image_prompt": "professional orthopedic medical illustration, forest green tones, wellness and recovery, 1080x1000 pixels, square crop, no text, save as JPG"
+}

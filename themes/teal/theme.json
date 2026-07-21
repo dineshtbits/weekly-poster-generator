@@ -1,0 +1,10 @@
+{
+  "name": "Teal",
+  "accent": "#0d9488",
+  "ink": "#0f2a28",
+  "panel": "rgba(255,255,255,0.92)",
+  "visual_bg": "rgba(220,242,240,0.6)",
+  "when_bg": "rgba(13,148,136,0.88)",
+  "location_bg": "rgba(8,90,82,0.97)",
+  "image_prompt": "professional orthopedic medical illustration, teal and cyan tones, calm healing atmosphere, 1080x1000 pixels, square crop, no text, save as JPG"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Blue",
+  "accent": "#0d6efd",
+  "ink": "#10243e",
+  "panel": "rgba(255,255,255,0.92)",
+  "visual_bg": "rgba(232,241,255,0.6)",
+  "when_bg": "rgba(13,110,253,0.88)",
+  "location_bg": "rgba(10,50,120,0.97)",
+  "image_prompt": "professional orthopedic medical illustration, cool blue tones, clean clinical background, 1080x1000 pixels, square crop, no text, save as JPG"
+}

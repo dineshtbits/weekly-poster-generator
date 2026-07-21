@@ -1,0 +1,10 @@
+{
+  "name": "Warm",
+  "accent": "#c2410c",
+  "ink": "#3b1a0f",
+  "panel": "rgba(255,255,255,0.92)",
+  "visual_bg": "rgba(255,237,213,0.6)",
+  "when_bg": "rgba(194,65,12,0.88)",
+  "location_bg": "rgba(120,35,5,0.97)",
+  "image_prompt": "professional orthopedic medical illustration, warm orange and amber tones, energetic healing, 1080x1000 pixels, square crop, no text, save as JPG"
+}
