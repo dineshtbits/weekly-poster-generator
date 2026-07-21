@@ -40,8 +40,8 @@ N_LOCATIONS = 3
 # Email (use an app password, never your real one). Set via env vars.
 SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "465"))
-SMTP_USER = os.environ.get("SMTP_USER", "")            # your sending gmail
-SMTP_PASS = os.environ.get("SMTP_PASS", "")            # gmail app password
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASS = os.environ.get("SMTP_PASS", "").replace(" ", "").replace("\xa0", "")
 MAIL_TO   = os.environ.get("MAIL_TO", "brother@example.com")
 
 
@@ -121,14 +121,15 @@ def send_email(files, sunday: dt.date):
     msg = EmailMessage()
     msg["Subject"] = f"Sunday posters — {sunday.strftime('%d-%m-%Y')}"
     msg["From"] = SMTP_USER
-    msg["To"] = MAIL_TO
+    recipients = [r.strip() for r in MAIL_TO.split(",")]
+    msg["To"] = ", ".join(recipients)
     msg.set_content("Attached: 3 posters for this Sunday. Forward each to its group.")
     for f in files:
         data = Path(f).read_bytes()
         msg.add_attachment(data, maintype="image", subtype="png", filename=Path(f).name)
     with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as s:
         s.login(SMTP_USER, SMTP_PASS)
-        s.send_message(msg)
+        s.send_message(msg, to_addrs=recipients)
     print("emailed", len(files), "posters to", MAIL_TO)
 
 
